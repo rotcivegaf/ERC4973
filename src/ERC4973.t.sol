@@ -275,10 +275,9 @@ contract ERC4973Test is Test, ERC721Holder {
     assertEq(abt.ownerOf(tokenId), to);
     aa.unequip(address(abt), tokenId);
     assertEq(abt.balanceOf(to), 0);
-    uint256 tokenId2 = abt.give(to, bytes(tokenURI), signature);
-    assertEq(abt.balanceOf(to), 1);
-    assertEq(abt.tokenURI(tokenId2), tokenURI);
-    assertEq(abt.ownerOf(tokenId2), to);
+
+    vm.expectRevert("_safeCheckAgreement: already used");
+    abt.give(to, bytes(tokenURI), signature);
   }
 
   function testTakeAndUnequipAndRetake() public {
@@ -294,10 +293,9 @@ contract ERC4973Test is Test, ERC721Holder {
     assertEq(abt.ownerOf(tokenId), to);
     abt.unequip(tokenId);
     assertEq(abt.balanceOf(to), 0);
-    uint256 tokenId2 = abt.take(passiveAddress, bytes(tokenURI), signature);
-    assertEq(abt.balanceOf(to), 1);
-    assertEq(abt.tokenURI(tokenId2), tokenURI);
-    assertEq(abt.ownerOf(tokenId2), to);
+
+    vm.expectRevert("_safeCheckAgreement: already used");
+    abt.take(passiveAddress, bytes(tokenURI), signature);
   }
 
   function testTakeEOA() public {

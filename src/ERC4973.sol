@@ -61,7 +61,7 @@ abstract contract ERC4973 is EIP712, ERC721URIStorage, IERC4973 {
     require(msg.sender != to, "give: cannot give from self");
     uint256 tokenId = _safeCheckAgreement(msg.sender, to, metadata, signature);
     string memory uri = decodeURI(metadata);
-    _safeMint(msg.sender, tokenId);
+    _mint(msg.sender, tokenId);
     _setTokenURI(tokenId, uri);
     _transfer(msg.sender, to, tokenId);
     _usedHashes.set(tokenId);
@@ -76,7 +76,7 @@ abstract contract ERC4973 is EIP712, ERC721URIStorage, IERC4973 {
     require(msg.sender != from, "take: cannot take from self");
     uint256 tokenId = _safeCheckAgreement(msg.sender, from, metadata, signature);
     string memory uri = decodeURI(metadata);
-    _safeMint(from, tokenId);
+    _mint(from, tokenId);
     _setTokenURI(tokenId, uri);
     _transfer(from, msg.sender, tokenId);
     _usedHashes.set(tokenId);

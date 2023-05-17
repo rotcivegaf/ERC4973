@@ -135,7 +135,7 @@ contract ERC4973Test is Test, ERC721Holder {
     assertEq(abt.ownerOf(tokenId), to);
 
     NonAuthorizedCaller nac = new NonAuthorizedCaller();
-    vm.expectRevert(bytes("unequip: sender must be owner"));
+    vm.expectRevert("unequip: sender must be owner");
 
     nac.unequip(address(abt), tokenId);
   }
@@ -152,7 +152,7 @@ contract ERC4973Test is Test, ERC721Holder {
     assertEq(abt.ownerOf(tokenId), to);
 
     NonAuthorizedCaller nac = new NonAuthorizedCaller();
-    vm.expectRevert(bytes("ERC721: invalid token ID"));
+    vm.expectRevert("ERC721: invalid token ID");
 
     nac.unequip(address(abt), 1337);
   }
@@ -161,7 +161,7 @@ contract ERC4973Test is Test, ERC721Holder {
     address to = address(rejecter);
     bytes memory signature;
 
-    vm.expectRevert(bytes("_safeCheckAgreement: invalid signature"));
+    vm.expectRevert("_safeCheckAgreement: invalid signature");
     abt.give(to, bytes(tokenURI), signature);
   }
 
@@ -169,7 +169,7 @@ contract ERC4973Test is Test, ERC721Holder {
     address from = address(rejecter);
     bytes memory signature;
 
-    vm.expectRevert(bytes("_safeCheckAgreement: invalid signature"));
+    vm.expectRevert("_safeCheckAgreement: invalid signature");
     abt.take(from, bytes(tokenURI), signature);
   }
 
@@ -202,7 +202,7 @@ contract ERC4973Test is Test, ERC721Holder {
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
 
-    vm.expectRevert(bytes("_safeCheckAgreement: invalid signature"));
+    vm.expectRevert("_safeCheckAgreement: invalid signature");
     uint256 tokenId = abt.take(passiveAddress, bytes(tokenURI), signature);
     assertEq(0, tokenId);
   }
@@ -216,7 +216,7 @@ contract ERC4973Test is Test, ERC721Holder {
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
 
-    vm.expectRevert(bytes("_safeCheckAgreement: invalid signature"));
+    vm.expectRevert("_safeCheckAgreement: invalid signature");
     uint256 tokenId = abt.give(to, bytes(tokenURI), signature);
     assertEq(0, tokenId);
   }
@@ -230,7 +230,7 @@ contract ERC4973Test is Test, ERC721Holder {
     bytes memory signature = abi.encodePacked(r, s, v);
     address unauthorizedTo = address(1337);
 
-    vm.expectRevert(bytes("_safeCheckAgreement: invalid signature"));
+    vm.expectRevert("_safeCheckAgreement: invalid signature");
     uint256 tokenId = abt.give(unauthorizedTo, bytes(tokenURI), signature);
     assertEq(0, tokenId);
   }
@@ -243,7 +243,7 @@ contract ERC4973Test is Test, ERC721Holder {
     bytes memory signature = abi.encodePacked(r, s, v);
     address unauthorizedFrom = address(1337);
 
-    vm.expectRevert(bytes("_safeCheckAgreement: invalid signature"));
+    vm.expectRevert("_safeCheckAgreement: invalid signature");
     uint256 tokenId = abt.take(unauthorizedFrom, bytes(tokenURI), signature);
     assertEq(0, tokenId);
   }
@@ -326,7 +326,7 @@ contract ERC4973Test is Test, ERC721Holder {
 
     abt.give(to, bytes(tokenURI), signature);
 
-    vm.expectRevert(bytes("_safeCheckAgreement: already used"));
+    vm.expectRevert("_safeCheckAgreement: already used");
     abt.give(to, bytes(tokenURI), signature);
   }
 
@@ -339,7 +339,7 @@ contract ERC4973Test is Test, ERC721Holder {
 
     abt.take(passiveAddress, bytes(tokenURI), signature);
 
-    vm.expectRevert(bytes("_safeCheckAgreement: already used"));
+    vm.expectRevert("_safeCheckAgreement: already used");
     abt.take(passiveAddress, bytes(tokenURI), signature);
   }
 
@@ -347,7 +347,7 @@ contract ERC4973Test is Test, ERC721Holder {
     address to = address(aa);
     bytes memory signature;
 
-    vm.expectRevert(bytes("give: cannot give from self"));
+    vm.expectRevert("give: cannot give from self");
     aa.give(address(abt), to, bytes(tokenURI), signature);
   }
 
@@ -355,7 +355,7 @@ contract ERC4973Test is Test, ERC721Holder {
     address from = address(aa);
     bytes memory signature;
 
-    vm.expectRevert(bytes("take: cannot take from self"));
+    vm.expectRevert("take: cannot take from self");
     aa.take(address(abt), from, bytes(tokenURI), signature);
   }
 
@@ -366,7 +366,7 @@ contract ERC4973Test is Test, ERC721Holder {
     uint256 tokenId = abt.give(to, bytes(tokenURI), signature);
 
     vm.prank(to);
-    vm.expectRevert(bytes("Not implemented"));
+    vm.expectRevert("Not implemented");
     abt.transferFrom(to, address(abt), tokenId);
   }
 
@@ -377,7 +377,7 @@ contract ERC4973Test is Test, ERC721Holder {
     uint256 tokenId = abt.give(to, bytes(tokenURI), signature);
 
     vm.prank(to);
-    vm.expectRevert(bytes("Not implemented"));
+    vm.expectRevert("Not implemented");
     abt.safeTransferFrom(to, address(abt), tokenId);
   }
 
@@ -388,7 +388,7 @@ contract ERC4973Test is Test, ERC721Holder {
     uint256 tokenId = abt.give(to, bytes(tokenURI), signature);
 
     vm.prank(to);
-    vm.expectRevert(bytes("Not implemented"));
+    vm.expectRevert("Not implemented");
     abt.safeTransferFrom(to, address(abt), tokenId, "");
   }
 }

@@ -661,6 +661,8 @@ abstract contract EIP712 {
     }
 }
 
+// OpenZeppelin Contracts (last updated v4.7.0) (token/ERC721/extensions/ERC721URIStorage.sol)
+
 // OpenZeppelin Contracts (last updated v4.7.0) (token/ERC721/ERC721.sol)
 
 // OpenZeppelin Contracts (last updated v4.7.0) (token/ERC721/IERC721.sol)
@@ -1362,8 +1364,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     ) internal virtual {}
 }
 
-// OpenZeppelin Contracts (last updated v4.7.0) (token/ERC721/extensions/ERC721URIStorage.sol)
-
 /**
  * @dev ERC721 token with storage based token URI management.
  */
@@ -1477,7 +1477,7 @@ library BitMaps {
 /// @title Account-bound tokens
 /// @dev See https://eips.ethereum.org/EIPS/eip-4973
 /// Note: the ERC-165 identifier for this interface is 0xf8801853.
-interface IERC4973 /* is IERC721, IERC721Metadata */ {
+interface IERC4973 { /* is IERC721, IERC721Metadata */
   /// @notice Removes the `uint256 tokenId` from an account. At any time, an
   ///  ABT receiver must be able to disassociate themselves from an ABT
   ///  publicly through calling this function. After successfully executing this
@@ -1546,7 +1546,7 @@ bytes32 constant AGREEMENT_HASH =
 
 /// @notice Reference implementation of EIP-4973 tokens.
 /// @author Tim Daubenschütz, Rahul Rumalla (https://github.com/rugpullindex/ERC4973/blob/master/src/ERC4973.sol)
-abstract contract ERC4973 is EIP712, ERC721, ERC721URIStorage, IERC4973 {
+abstract contract ERC4973 is EIP712, ERC721URIStorage, IERC4973 {
   using BitMaps for BitMaps.BitMap;
 
   BitMaps.BitMap private _usedHashes;
@@ -1555,19 +1555,6 @@ abstract contract ERC4973 is EIP712, ERC721, ERC721URIStorage, IERC4973 {
     EIP712(name, version)
     ERC721(name, symbol)
   {}
-
-  function _burn(uint256 tokenId) internal override (ERC721, ERC721URIStorage) {
-    super._burn(tokenId);
-  }
-
-  function tokenURI(uint256 tokenId)
-    public
-    view
-    override (ERC721, ERC721URIStorage)
-    returns (string memory)
-  {
-    return super.tokenURI(tokenId);
-  }
 
   function decodeURI(bytes calldata metadata)
     public
@@ -1629,11 +1616,7 @@ abstract contract ERC4973 is EIP712, ERC721, ERC721URIStorage, IERC4973 {
     address passive,
     bytes calldata metadata,
     bytes calldata signature
-  )
-    internal
-    virtual
-    returns (uint256)
-  {
+  ) internal virtual returns (uint256) {
     bytes32 hash = _getHash(active, passive, metadata);
     uint256 tokenId = uint256(hash);
 
@@ -1650,8 +1633,9 @@ abstract contract ERC4973 is EIP712, ERC721, ERC721URIStorage, IERC4973 {
     view
     returns (bytes32)
   {
-    bytes32 structHash =
-      keccak256(abi.encode(AGREEMENT_HASH, active, passive, keccak256(metadata)));
+    bytes32 structHash = keccak256(
+      abi.encode(AGREEMENT_HASH, active, passive, keccak256(metadata))
+    );
     return _hashTypedDataV4(structHash);
   }
 }

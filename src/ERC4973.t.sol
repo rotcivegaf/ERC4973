@@ -4,7 +4,8 @@ pragma solidity ^0.8.6;
 import "forge-std/Test.sol";
 import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import {ERC721Holder} from "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
+import {ERC721Holder} from
+  "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
 import {IERC721Metadata} from
   "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 
@@ -40,11 +41,7 @@ contract AccountAbstraction is ERC1271Mock {
     address to,
     bytes calldata metadata,
     bytes calldata signature
-  )
-    external
-    virtual
-    returns (uint256)
-  {
+  ) external virtual returns (uint256) {
     return ERC4973(collection).give(to, metadata, signature);
   }
 
@@ -53,11 +50,7 @@ contract AccountAbstraction is ERC1271Mock {
     address from,
     bytes calldata metadata,
     bytes calldata signature
-  )
-    external
-    virtual
-    returns (uint256)
-  {
+  ) external virtual returns (uint256) {
     return ERC4973(collection).take(from, metadata, signature);
   }
 
@@ -364,5 +357,38 @@ contract ERC4973Test is Test, ERC721Holder {
 
     vm.expectRevert(bytes("take: cannot take from self"));
     aa.take(address(abt), from, bytes(tokenURI), signature);
+  }
+
+  function testTryTransferFromABT() public {
+    address to = address(approver);
+    bytes memory signature;
+
+    uint256 tokenId = abt.give(to, bytes(tokenURI), signature);
+
+    vm.prank(to);
+    vm.expectRevert(bytes("Not implemented"));
+    abt.transferFrom(to, address(abt), tokenId);
+  }
+
+  function testTrySafeTransferFromABT() public {
+    address to = address(approver);
+    bytes memory signature;
+
+    uint256 tokenId = abt.give(to, bytes(tokenURI), signature);
+
+    vm.prank(to);
+    vm.expectRevert(bytes("Not implemented"));
+    abt.safeTransferFrom(to, address(abt), tokenId);
+  }
+
+  function testTrySafeTransferFromWithDataABT() public {
+    address to = address(approver);
+    bytes memory signature;
+
+    uint256 tokenId = abt.give(to, bytes(tokenURI), signature);
+
+    vm.prank(to);
+    vm.expectRevert(bytes("Not implemented"));
+    abt.safeTransferFrom(to, address(abt), tokenId, "");
   }
 }
